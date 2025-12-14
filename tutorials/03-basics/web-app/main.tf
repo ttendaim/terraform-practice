@@ -2,10 +2,10 @@ terraform {
   # Assumes s3 bucket and dynamo DB table already set up
   # See /code/03-basics/aws-backend
   backend "s3" {
-    bucket         = "devops-directive-tf-state"
+    bucket         = "devops-tf-state-1212"
     key            = "03-basics/web-app/terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "terraform-state-locking"
+    region         = "eu-central-1"
+    use_lockfile   = true
     encrypt        = true
   }
 
@@ -18,11 +18,11 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "eu-central-1"
 }
 
 resource "aws_instance" "instance_1" {
-  ami             = "ami-011899242bb902164" # Ubuntu 20.04 LTS // us-east-1
+  ami             = "ami-004e960cde33f9146" # Ubuntu 20.04 LTS // us-east-1
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.instances.name]
   user_data       = <<-EOF
@@ -33,7 +33,7 @@ resource "aws_instance" "instance_1" {
 }
 
 resource "aws_instance" "instance_2" {
-  ami             = "ami-011899242bb902164" # Ubuntu 20.04 LTS // us-east-1
+  ami             = "ami-004e960cde33f9146" # Ubuntu 20.04 LTS // us-east-1
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.instances.name]
   user_data       = <<-EOF
@@ -186,21 +186,21 @@ resource "aws_lb" "load_balancer" {
 
 }
 
-resource "aws_route53_zone" "primary" {
-  name = "devopsdeployed.com"
-}
+# resource "aws_route53_zone" "primary" {
+#   name = "devopsdeployed.com"
+# }
 
-resource "aws_route53_record" "root" {
-  zone_id = aws_route53_zone.primary.zone_id
-  name    = "devopsdeployed.com"
-  type    = "A"
+# resource "aws_route53_record" "root" {
+#   zone_id = aws_route53_zone.primary.zone_id
+#   name    = "devopsdeployed.com"
+#   type    = "A"
 
-  alias {
-    name                   = aws_lb.load_balancer.dns_name
-    zone_id                = aws_lb.load_balancer.zone_id
-    evaluate_target_health = true
-  }
-}
+#   alias {
+#     name                   = aws_lb.load_balancer.dns_name
+#     zone_id                = aws_lb.load_balancer.zone_id
+#     evaluate_target_health = true
+#   }
+# }
 
 resource "aws_db_instance" "db_instance" {
   allocated_storage = 20
