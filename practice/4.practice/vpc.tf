@@ -9,20 +9,7 @@ resource "aws_vpc" "custom_vpc" {
   }
 }
 
-resource "aws_security_group" "default1" {
-  name = "global"
 
-}
-
-resource "aws_security_group_rule" "global" {
-    security_group_id = aws_security_group.default1.id
-    type = "ingress"
-    from_port  = "0"
-    to_port    = "0"
-    protocol   = "TCP"
-    cidr_blocks = ["0.0.0.0/0"]
-
-}
 
 variable "vpc_availability_zones" {
   description = "List of availability zones"
