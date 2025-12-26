@@ -41,3 +41,6 @@ resource "local_file" "text" {
   content  = "123 testing"
   filename = "counting.txt"
 }
+
+
+
